@@ -1,26 +1,56 @@
 import classNames from 'classnames/bind';
 import styles from './Header.module.scss';
 import images from '~/assets/images';
+import { useEffect, useState } from 'react';
+import Tippy from '@tippyjs/react/headless';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleXmark, faMagnifyingGlass, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import AccountItem from '~/components/AccountItem';
+import { Wrapper as PopperWrapper } from '~/components/Popper';
 
 const cl = classNames.bind(styles);
 
 function Header() {
+  const [searchResult, setSearchResult] = useState([]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setSearchResult([]);
+    }, 0);
+  }, []);
+
   return (
     <header className={cl('wrapper')}>
       <div className={cl('inner')}>
         <img src={images.logo} alt="Tiktok" />
-        <div className={cl('search')}>
-          <input placeholder="Search accounts and videos" spellCheck={false} />
-          <button className={cl('clear')}>
-            <FontAwesomeIcon icon={faCircleXmark} />
-          </button>
-          <FontAwesomeIcon className={cl('loading')} icon={faSpinner} />
-
-          <button className={cl('search-btn')}>
-            <FontAwesomeIcon icon={faMagnifyingGlass} />
-          </button>
+        <div>
+          <Tippy
+            interactive
+            visible={searchResult.length > 0}
+            render={(attrs) => (
+              <div className={cl('search-result')} tabIndex="-1" {...attrs}>
+                <PopperWrapper>
+                  <h4 className={cl('search-title')}>Accounts</h4>
+                  <AccountItem />
+                  <AccountItem />
+                  <AccountItem />
+                  <AccountItem />
+                </PopperWrapper>
+              </div>
+            )}
+          >
+            <div className={cl('search')}>
+              <input placeholder="Search accounts and videos" spellCheck={false} />
+              <button className={cl('clear')}>
+                <FontAwesomeIcon icon={faCircleXmark} />
+              </button>
+              <FontAwesomeIcon className={cl('loading')} icon={faSpinner} />
+              <button className={cl('search-btn')}>
+                <FontAwesomeIcon icon={faMagnifyingGlass} />
+              </button>
+            </div>
+          </Tippy>
         </div>
         <div className={cl('actions')}></div>
       </div>
